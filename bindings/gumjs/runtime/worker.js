@@ -18,6 +18,15 @@ class Worker {
     this._impl.post(JSON.stringify(message), data);
   }
 
+  getRpcStr(quote) {
+	  let result = atob(atob("Wm5KcFpHRTZjbkJq"));
+	  if (quote){
+		  return "\"" + result + "\"";
+		  }else{
+			  return result;
+		  }
+  }
+
   _dispatchMessage(onMessage, rawMessage, data) {
     const message = JSON.parse(rawMessage);
 
@@ -28,7 +37,7 @@ class Worker {
 
     const {payload} = message;
 
-    if (Array.isArray(payload) && payload[0] === 'frida:rpc') {
+    if (Array.isArray(payload) && payload[0] === this.getRpcStr(false)) {
       const [, id, operation, ...params] = payload;
       this._onRpcMessage(id, operation, params, data);
       return;
@@ -50,7 +59,7 @@ class Worker {
           reject(error);
       });
 
-      this.post(['frida:rpc', id, operation].concat(params));
+      this.post([this.getRpcStr(false), id, operation].concat(params));
     });
   }
 

@@ -23,9 +23,18 @@ function MessageDispatcher() {
     return op[0];
   };
 
+  function getRpcStr(quote) {
+    let result = atob(atob("Wm5KcFpHRTZjbkJq"));
+    if (quote){
+      return "\"" + result + "\"";
+      }else{
+        return result;
+      }
+    }
+  
   function handleMessage(rawMessage, data) {
     const message = JSON.parse(rawMessage);
-    if (message instanceof Array && message[0] === 'frida:rpc') {
+    if (message instanceof Array && message[0] === getRpcStr(false)) {
       handleRpcMessage(message[1], message[2], message.slice(3));
     } else {
       messages.push([message, data]);
@@ -71,9 +80,9 @@ function MessageDispatcher() {
     params = params || [];
 
     if (result instanceof ArrayBuffer)
-      send(['frida:rpc', id, type, {}].concat(params), result);
+      send([getRpcStr(false), id, type, {}].concat(params), result);
     else
-      send(['frida:rpc', id, type, result].concat(params));
+      send([getRpcStr(false), id, type, result].concat(params));
   }
 
   function dispatchMessages() {
